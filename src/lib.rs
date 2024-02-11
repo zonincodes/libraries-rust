@@ -2,29 +2,34 @@ pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
-mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
+mod front_of_house;
 
-        pub fn seat_at_table() -> String { let str: String = String::from("Seat"); return str; }
-    }
-
-    pub mod serving {
-        pub fn take_order() -> u32 { 3 }
-        pub fn serve_order() -> u32 { 4 }
-        pub fn take_payment() -> i32 { 6 }
-    }
-}
+pub use crate::front_of_house::hosting;
 
 pub fn eat_at_restaurant() {
 
     // aboslute path
-    crate::front_of_house::hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
 
     // relative path
     front_of_house::hosting::add_to_waitlist();
 }
 
+mod back_of_house {
+    pub struct Breakfast {
+        pub toast: String, 
+        seasonal_fruit: String,
+    }
+
+    impl Breakfast {
+        pub fn summer(toast: &str) -> Breakfast {
+            Breakfast {
+                toast: String::from(toast),
+                seasonal_fruit: String::from("peaches"),
+            }
+        }
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -50,4 +55,11 @@ mod tests {
         assert_eq!(front_of_house::serving::take_payment(), 6);
     }
 
+    #[test]
+    fn struct_test() {
+        let mut meal = back_of_house::Breakfast::summer("Rye");
+        meal.toast = String::from("Wheat");
+
+        assert_ne!(meal.toast, "Rye");
+    }
 }
